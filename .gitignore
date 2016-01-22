@@ -2,3 +2,4 @@ bin
 Castalia-Trace.txt
 CastaliaBin
 out
+[0-9]*-[0-9]*.txt
