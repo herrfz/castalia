@@ -79,7 +79,7 @@ std::ostream & CastaliaModule::trace()
 {
 	if (hasPar("collectTraceInfo") && par("collectTraceInfo")) {
 		return (ostream &) DebugInfoWriter::getStream() <<
-			"\n" << setw(16) << simTime() << setw(40) << getFullPath() << " ";
+			"\n" << setw(20) << simTime() << "\t" << setw(40) << getFullPath() << "\t";
 	} else {
 		return empty;
 	}

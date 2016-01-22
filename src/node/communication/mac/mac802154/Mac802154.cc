@@ -228,7 +228,8 @@ void Mac802154::timerFiredCallback(int index)
 			} else if (CCAcode == CS_NOT_VALID_YET) {
 				setTimer(PERFORM_CCA, phyDelayForValidCS);
 			} else {	//CS_NOT_VALID
-				opp_error("802.15.4 MAC internal error, isChannelClear() function called when radio is NOT READY");
+				//opp_error("802.15.4 MAC internal error, isChannelClear() function called when radio is NOT READY");
+				trace() << "802.15.4 MAC internal error, isChannelClear() function called when radio is NOT READY";
 			}
 			break;
 		}
