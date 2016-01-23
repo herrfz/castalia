@@ -1,7 +1,7 @@
 INFILE=$(shell ls *.txt | grep '[0-9*]' | sort -r | head -n1)
 
 run:
-	Castalia -c General -r 1
+	Castalia -c General -r 5
 
 results:
 	CastaliaResults -i $(INFILE) -s latency
@@ -12,4 +12,4 @@ results:
 	CastaliaResults -i $(INFILE) -s time
 
 clean:
-	rm *.txt
+	-rm *.txt *.tmp
