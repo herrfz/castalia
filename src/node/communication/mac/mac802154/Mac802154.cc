@@ -130,7 +130,7 @@ void Mac802154::timerFiredCallback(int index)
 			} else {	// if not a PAN coordinator, then wait for beacon
 				toRadioLayer(createRadioCommand(SET_STATE, RX));
 				setMacState(MAC_STATE_WAIT_FOR_BEACON);
-				setTimer(BEACON_TIMEOUT, guardTime * 3);
+				setTimer(BEACON_TIMEOUT, guardTime * 100); // TEST
 			}
 			break;
 		}
@@ -148,9 +148,12 @@ void Mac802154::timerFiredCallback(int index)
 				trace() << "Missed beacon from PAN " << associatedPAN <<
 				    ", will wake up to receive next beacon in " << 
 				    beaconInterval * symbolLen - guardTime * 3 << " seconds";
-				setMacState(MAC_STATE_SLEEP);
-				toRadioLayer(createRadioCommand(SET_STATE, SLEEP));
-				setTimer(FRAME_START, beaconInterval * symbolLen - guardTime * 3);
+                //TEST: don't go to sleep when beacon is missed; keep listening
+                toRadioLayer(createRadioCommand(SET_STATE, RX));
+                setMacState(MAC_STATE_WAIT_FOR_BEACON);
+				//setMacState(MAC_STATE_SLEEP);
+				//toRadioLayer(createRadioCommand(SET_STATE, SLEEP));
+				//setTimer(FRAME_START, beaconInterval * symbolLen - guardTime * 3);
 			}
 			break;
 		}
@@ -379,6 +382,7 @@ void Mac802154::fromRadioLayer(cPacket * pkt, double rssi, double lqi)
 
 		/* received a BEACON frame */
 		case MAC_802154_BEACON_PACKET:{
+            trace() << "received Beacon!!"; // TEST
 			int PANaddr = rcvPacket->getPANid();
 			recvBeacons++;
 			if (associatedPAN == -1) {
@@ -427,6 +431,7 @@ void Mac802154::fromRadioLayer(cPacket * pkt, double rssi, double lqi)
 
 			//cancel beacon timeout message (if present)
 			cancelTimer(BEACON_TIMEOUT);
+            cancelTimer(FRAME_START); // TEST
 
 			if (requestGTS) {
 				if (lockedGTS) {
@@ -462,7 +467,7 @@ void Mac802154::fromRadioLayer(cPacket * pkt, double rssi, double lqi)
 			}
 
 			setTimer(FRAME_START, baseSuperframeDuration * (1 << beaconOrder) *
-				 symbolLen - guardTime - TX_TIME(rcvPacket->getByteLength()));
+				 symbolLen - 50 * guardTime - TX_TIME(rcvPacket->getByteLength())); // TEST
 			break;
 		}
 
