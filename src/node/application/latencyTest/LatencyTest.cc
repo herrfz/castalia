@@ -12,7 +12,9 @@ void LatencyTest::startup()
 	dataSN = 0;
 
 	if (packet_spacing > 0 && recipientAddress.compare(SELF_NETWORK_ADDRESS) != 0)
-		setTimer(SEND_PACKET, exponential(packet_spacing) + startupDelay);
+		//setTimer(SEND_PACKET, exponential(packet_spacing) + startupDelay);
+		//Changed Muratg
+		setTimer(SEND_PACKET, packet_spacing + startupDelay);
 	else
 		trace() << "Not sending packets";
 
@@ -43,7 +45,9 @@ void LatencyTest::timerFiredCallback(int index)
 			trace() << "Sending packet #" << dataSN;
 			toNetworkLayer(createGenericDataPacket(0, dataSN), par("nextRecipient"));
 			dataSN++;
-			setTimer(SEND_PACKET, exponential(packet_spacing));
+			//setTimer(SEND_PACKET, exponential(packet_spacing));
+			//Changed Muratg
+			setTimer(SEND_PACKET, packet_spacing);
 			break;
 		}
 	}

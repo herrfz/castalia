@@ -238,8 +238,8 @@ void Mac802154::timerFiredCallback(int index)
 		}
 
 		case START_SLEEPING:{
-			setMacState(MAC_STATE_SLEEP);
-			toRadioLayer(createRadioCommand(SET_STATE, SLEEP));
+			//setMacState(MAC_STATE_SLEEP);
+			//toRadioLayer(createRadioCommand(SET_STATE, SLEEP));
 			break;
 		}
 	}
@@ -457,8 +457,8 @@ void Mac802154::fromRadioLayer(cPacket * pkt, double rssi, double lqi)
 						// then we start sleeping right after CAP ends
 						setTimer(START_SLEEPING, CAPend);
 				} else {
-					setMacState(MAC_STATE_SLEEP);
-					toRadioLayer(createRadioCommand(SET_STATE, SLEEP));
+					//setMacState(MAC_STATE_SLEEP);
+					//toRadioLayer(createRadioCommand(SET_STATE, SLEEP));
 				}
 				if (GTSstart != 0 && (!enableCAP || GTSstart != CAPend))
 					// if GTS slot exists and does not start after CAP (or CAP is disabled) 
@@ -631,8 +631,8 @@ void Mac802154::handleAckPacket(Mac802154Packet * rcvPacket)
 			if (enableCAP) {
 				attemptTransmission("GTS request granted");
 			} else {
-				setMacState(MAC_STATE_SLEEP);
-				toRadioLayer(createRadioCommand(SET_STATE, SLEEP));
+				//setMacState(MAC_STATE_SLEEP);
+				//toRadioLayer(createRadioCommand(SET_STATE, SLEEP));
 			}
 			break;
 		}
@@ -700,6 +700,9 @@ void Mac802154::attemptTransmission(const char * descr)
 			initiateCSMACA(macMaxFrameRetries, MAC_STATE_WAIT_FOR_DATA_ACK,
 				       ackWaitDuration + TX_TIME(nextPacket->getByteLength()));
 		return;
+	}
+	else{
+		trace() << "No packet in buffer";
 	}
 
 	setMacState(MAC_STATE_IDLE);
@@ -831,7 +834,7 @@ int Mac802154::collectPacketState(const char *s)
 		} else {
 			nextPacketState = s;
 		}
-		//packetBreak[nextPacketState]++;
+		packetBreak[nextPacketState]++;
 		return 1;
 	}
 	return 0;
